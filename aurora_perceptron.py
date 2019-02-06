@@ -14,35 +14,44 @@ def getBlue(blueVal):
 
     return '#%02x%02x%02x' % (0, 0, blueVal)
 
-plt.figure(0)
-images = glob.glob('test/*.png')
+def genHist(images):
+    # file = open("hist_vals.txt", "w")
+    perceptron_hist = []
+    for image in images:
+        with open(image, 'rb') as file:
+            img = Image.open(file)
+            # get color histograms of img
+            histogram = img.histogram()
+            # Take only RGB counts
+            l1 = histogram[0:256]
+            red_hist = [val / max(l1) for val in l1]
+            l2 = histogram[256:512]
+            blue_hist = [val / max(l2) for val in l2]
+            l3 = histogram[512:768]
+            green_hist = [val / max(l3) for val in l3]
+            rgb_hist = red_hist + green_hist + blue_hist
+            perceptron_hist.append(rgb_hist)
+    return perceptron_hist
 
-# file = open("hist_vals.txt", "w")
-perceptron_hist = []
-for image in images:
-    with open(image, 'rb') as file:
-        img = Image.open(file)
-        # get color histograms of img
-        histogram = img.histogram()
-        # Take only RGB counts
-        l1 = histogram[0:256]
-        red_hist = [val / max(l1) for val in l1]
-        l2 = histogram[256:512]
-        blue_hist = [val / max(l2) for val in l2]
-        l3 = histogram[512:768]
-        green_hist = [val / max(l3) for val in l3]
-        rgb_hist = red_hist + green_hist + blue_hist
-        perceptron_hist.append(rgb_hist)
+plt.figure(0)
+aurora_images = glob.glob('yes-aurora/*.jpg')
+no_aurora_images = glob.glob('no-aurora/*.jpg')
+
+aurora_hist = genHist(aurora_images)
+no_aurora_hist = genHist(no_aurora_images)
 
 with open('new.txt', 'w') as f:
-    for hist in perceptron_hist:
-        f.write("%s\n" % hist)
+    for item in aurora_hist:
+        f.write("1:")
+        f.write("%s\n" % item)
+    for item in no_aurora_hist:
+        f.write("-1:")
+        f.write("%s\n" % item)
     f.close()
 
 # R histogram
 
 for i in range(0, 256):
-
     plt.bar(i, red_hist[i], color = getRed(i), edgecolor=getRed(i), alpha=0.3)
 
 
@@ -53,7 +62,6 @@ plt.figure(1)
 for i in range(0, 256):
 
     plt.bar(i, green_hist[i], color = getGreen(i), edgecolor=getGreen(i),alpha=0.3)
-
 
 # B histogram
 
