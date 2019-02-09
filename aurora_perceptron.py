@@ -7,15 +7,12 @@ def getRed(redVal):
     return '#%02x%02x%02x' % (redVal, 0, 0)
 
 def getGreen(greenVal):
-
     return '#%02x%02x%02x' % (0, greenVal, 0)
 
 def getBlue(blueVal):
-
     return '#%02x%02x%02x' % (0, 0, blueVal)
 
 def genHist(images):
-    # file = open("hist_vals.txt", "w")
     perceptron_hist = []
     for image in images:
         with open(image, 'rb') as file:
@@ -24,16 +21,31 @@ def genHist(images):
             histogram = img.histogram()
             # Take only RGB counts
             l1 = histogram[0:256]
-            red_hist = [val / max(l1) for val in l1]
+            red_hist = [val / 1500 for val in l1]
             l2 = histogram[256:512]
-            blue_hist = [val / max(l2) for val in l2]
+            blue_hist = [val / 1800 for val in l2]
             l3 = histogram[512:768]
-            green_hist = [val / max(l3) for val in l3]
+            green_hist = [val / 2500 for val in l3]
             rgb_hist = red_hist + green_hist + blue_hist
             perceptron_hist.append(rgb_hist)
+
+    # R histogram
+    plt.figure(0)
+    for i in range(0, 256):
+        plt.bar(i, red_hist[i], color = getRed(i), edgecolor=getRed(i), alpha=0.3)
+
+
+    # G histogram
+    plt.figure(1)
+    for i in range(0, 256):
+        plt.bar(i, green_hist[i], color = getGreen(i), edgecolor=getGreen(i),alpha=0.3)
+
+    # B histogram
+    plt.figure(2)
+    for i in range(0, 256):
+        plt.bar(i, blue_hist[i], color = getBlue(i), edgecolor=getBlue(i),alpha=0.3)
     return perceptron_hist
 
-plt.figure(0)
 aurora_images = glob.glob('yes-aurora/*.jpg')
 no_aurora_images = glob.glob('no-aurora/*.jpg')
 
@@ -49,28 +61,9 @@ with open('new.txt', 'w') as f:
         f.write("%s\n" % item)
     f.close()
 
-# R histogram
-
-for i in range(0, 256):
-    plt.bar(i, red_hist[i], color = getRed(i), edgecolor=getRed(i), alpha=0.3)
-
-
-# G histogram
-
-plt.figure(1)
-
-for i in range(0, 256):
-
-    plt.bar(i, green_hist[i], color = getGreen(i), edgecolor=getGreen(i),alpha=0.3)
-
-# B histogram
-
-plt.figure(2)
-
-for i in range(0, 256):
-
-    plt.bar(i, blue_hist[i], color = getBlue(i), edgecolor=getBlue(i),alpha=0.3)
-
-
-
 plt.show()
+
+
+# Plug into perceptron
+
+
