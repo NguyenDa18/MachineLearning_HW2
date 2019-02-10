@@ -1,69 +1,54 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import glob
-from PIL import Image
+import pandas as pd
+import re
 
-def getRed(redVal):
-    return '#%02x%02x%02x' % (redVal, 0, 0)
+mu = 0.2
+epochs = 5
 
-def getGreen(greenVal):
-    return '#%02x%02x%02x' % (0, greenVal, 0)
+plt.xlabel("x1")
+plt.ylabel("x2")
+plt.title("Aurora perceptron learning")
 
-def getBlue(blueVal):
-    return '#%02x%02x%02x' % (0, 0, blueVal)
+np.random.seed(0)
+initialBias = np.random.random()
 
-def genHist(images):
-    perceptron_hist = []
-    for image in images:
-        with open(image, 'rb') as file:
-            img = Image.open(file)
-            # get color histograms of img
-            histogram = img.histogram()
-            # Take only RGB counts
-            l1 = histogram[0:256]
-            red_hist = [val / 1500 for val in l1]
-            l2 = histogram[256:512]
-            blue_hist = [val / 1800 for val in l2]
-            l3 = histogram[512:768]
-            green_hist = [val / 2500 for val in l3]
-            rgb_hist = red_hist + green_hist + blue_hist
-            perceptron_hist.append(rgb_hist)
+# Read in data
+data = []
+with open('new.txt', 'rt') as in_file:
+    for line in in_file:
+        data.append(line.rstrip('\n'))
 
-    # R histogram
-    plt.figure(0)
-    for i in range(0, 256):
-        plt.bar(i, red_hist[i], color = getRed(i), edgecolor=getRed(i), alpha=0.3)
+L = []
+cols = []
+for line in data:
+    L.append(int(re.split(':', line)[0]))
+    filtered = re.split("1:", line)[1].strip()
+    cleanStr = filtered.replace('[', '')
+    cleanStr2 = filtered.replace(']', '')
+    cols_Str = cleanStr2.split(',')
+    data_cols = [float(el) for el in cols_Str]
+    cols.append(data_cols)
 
 
-    # G histogram
-    plt.figure(1)
-    for i in range(0, 256):
-        plt.bar(i, green_hist[i], color = getGreen(i), edgecolor=getGreen(i),alpha=0.3)
 
-    # B histogram
-    plt.figure(2)
-    for i in range(0, 256):
-        plt.bar(i, blue_hist[i], color = getBlue(i), edgecolor=getBlue(i),alpha=0.3)
-    return perceptron_hist
 
-aurora_images = glob.glob('yes-aurora/*.jpg')
-no_aurora_images = glob.glob('no-aurora/*.jpg')
-
-aurora_hist = genHist(aurora_images)
-no_aurora_hist = genHist(no_aurora_images)
-
-with open('new.txt', 'w') as f:
-    for item in aurora_hist:
-        f.write("1:")
-        f.write("%s\n" % item)
-    for item in no_aurora_hist:
-        f.write("-1:")
-        f.write("%s\n" % item)
-    f.close()
-
+for j in range(epochs):
+    accuracy = 0
+    for i in range(rows):
+        charge = W[0] + np.dot(data[i, 1:], W[1:])
+        print(charge)
+        predict = 1 if charge > 0 else 0
+        if predict == L[i]:
+            accuracy += 1
+        else:
+            Error = predict - L[i]
+            W_t = W
+            X_t = np.concatenate([1], data[i,1:])
+            W_t = np.multiply(mu, np.multiply(Error, X_t))
+            W = np.subtract(W, W_t)
+            print(W_t)
+            print("Error: %f charge: %f predict: %f L[i]: %f" % (Error, charge, predict, L[i]))
+            plt.plot(np.arange(-5,5,0.1), -W/[0] / W[2] * np.arange(-5,5,0.1))
+    print("Accuracy: %f" % (float(accuracy) / rows))
 plt.show()
-
-
-# Plug into perceptron
-
-
