@@ -11,41 +11,50 @@ plt.ylabel("x2")
 plt.title("Aurora perceptron learning")
 
 np.random.seed(0)
-initialBias = np.random.random()
 
 # Read in data
-data = []
+lines_data = []
 with open('new.txt', 'rt') as in_file:
     for line in in_file:
-        data.append(line.rstrip('\n'))
+        lines_data.append(line.rstrip('\n'))
 
-L = []
-cols = []
-for line in data:
-    L.append(int(re.split(':', line)[0]))
-    filtered = re.split("1:", line)[1].strip()
-    cleanStr = filtered.replace('[', '')
-    cleanStr2 = filtered.replace(']', '')
-    cols_Str = cleanStr2.split(',')
-    data_cols = [float(el) for el in cols_Str]
-    cols.append(data_cols)
+data_list = []
+for line in lines_data:
+    label = int(re.split(':', line)[0])
 
+    parsed_input = re.split('1:', line)[1].strip()
+    parsed_input = parsed_input.replace("[", "")
+    parsed_input = parsed_input.replace("]", "")
+    parsed_input_list = parsed_input.split(',')
+    inputs = [float(el) for el in parsed_input_list]
+    row = [label] + inputs
+    data_list.append(row)
+data = np.asarray(data_list)
 
+L = data[:,0] # labels of samples
 
+# Generate random weights of 256 + 256 + 256 AND 1 for initial bias
+W = np.random.random_sample((256 * 3) + 1,)
 
+rows = data.shape[0]
+cols = data.shape[1]
+
+############################################################
+                    ## PERCEPTRON ##
+############################################################
 for j in range(epochs):
     accuracy = 0
     for i in range(rows):
         charge = W[0] + np.dot(data[i, 1:], W[1:])
-        print(charge)
+        print("Charge: %f" % charge)
         predict = 1 if charge > 0 else 0
         if predict == L[i]:
             accuracy += 1
         else:
             Error = predict - L[i]
             W_t = W
-            X_t = np.concatenate([1], data[i,1:])
-            W_t = np.multiply(mu, np.multiply(Error, X_t))
+            # X_t = np.concatenate([1.000000000000], data[i, 1:])
+            W_t = np.multiply(mu, np.multiply(Error, data[i, 1:]))
             W = np.subtract(W, W_t)
             print(W_t)
             print("Error: %f charge: %f predict: %f L[i]: %f" % (Error, charge, predict, L[i]))
