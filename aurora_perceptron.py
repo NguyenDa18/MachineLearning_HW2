@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import re
 
-mu = 1.5
-epochs = 5
+mu = 0.001
+epochs = 10
 
 # Part 3.
 # Build a simple perceptron with a step activation function. The perceptron should take the color histogram as its input and return a single output: 1 if aurora is in the image and 0 otherwise. You can implement this logic by simple checking the perceptron’s output, if the output is high return true, otherwise return false. When you are training the perceptron split the feature vectors into 80% of images for training and reserve 20% for validation. When training the perceptron, present the color histograms at random. Test different batch sizes (20 would be a good start).
@@ -43,7 +43,8 @@ L = data[:,0] # labels of samples
 # Generate random weights of 256 + 256 + 256 AND 1 for initial bias
 W = np.random.random_sample((256 * 3) + 1,)
 
-rows = data.shape[0]
+# rows = data.shape[0]
+rows = 200
 cols = data.shape[1]
 
 ############################################################
@@ -51,10 +52,11 @@ cols = data.shape[1]
 ############################################################
 for j in range(epochs):
     accuracy = 0
-    for i in range(200):
+    for i in range(rows):
         charge = W[0] + np.dot(data[i, 1:], W[1:])
         print("Charge: %f" % charge)
         predict = 1 if charge > 0 else 0
+        print("Predict: %d" % predict)
         if predict == L[i]:
             accuracy += 1
         else:
