@@ -3,8 +3,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import re
 
-mu = 0.2
+mu = 1.5
 epochs = 5
+
+# Part 3.
+# Build a simple perceptron with a step activation function. The perceptron should take the color histogram as its input and return a single output: 1 if aurora is in the image and 0 otherwise. You can implement this logic by simple checking the perceptron’s output, if the output is high return true, otherwise return false. When you are training the perceptron split the feature vectors into 80% of images for training and reserve 20% for validation. When training the perceptron, present the color histograms at random. Test different batch sizes (20 would be a good start).
+
+# Make sure your perceptron implementation has a parameterized learning rate. Perform experiments with the learning m = 0.1, 0.01, 0.001, and 1.5. Run as many learning batches/epochs as you need to achieve desired classification performance. For your report, one of your figures should include a plot of a training error and classification accuracy (two plot curves) vs. training epoch. You might also want to include accuracy, precision, recall measures for your experiments.
+
+
 
 plt.xlabel("x1")
 plt.ylabel("x2")
@@ -44,7 +51,7 @@ cols = data.shape[1]
 ############################################################
 for j in range(epochs):
     accuracy = 0
-    for i in range(rows):
+    for i in range(200):
         charge = W[0] + np.dot(data[i, 1:], W[1:])
         print("Charge: %f" % charge)
         predict = 1 if charge > 0 else 0
@@ -53,11 +60,12 @@ for j in range(epochs):
         else:
             Error = predict - L[i]
             W_t = W
-            # X_t = np.concatenate([1.000000000000], data[i, 1:])
-            W_t = np.multiply(mu, np.multiply(Error, data[i, 1:]))
+            # X_t = np.concatenate([:, 1], data[i, 1:])
+            X_t  = np.concatenate(([1], data[i,1:]))
+            # W_t = np.multiply(mu, np.multiply(Error, data[i, 1:]))
+            W_t = np.multiply(mu, np.multiply(Error, X_t))
             W = np.subtract(W, W_t)
-            print(W_t)
             print("Error: %f charge: %f predict: %f L[i]: %f" % (Error, charge, predict, L[i]))
-            plt.plot(np.arange(-5,5,0.1), -W/[0] / W[2] * np.arange(-5,5,0.1))
+            plt.plot (np.arange (-2.5,2.5,0.1), -W[0]/W[2] - W[1]/W[2] * np.arange(-2.5,2.5,0.1))
     print("Accuracy: %f" % (float(accuracy) / rows))
 plt.show()
