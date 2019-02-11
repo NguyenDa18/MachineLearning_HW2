@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import re
 
-mu = 0.001
+mu = 0.01
 epochs = 10
 
 # Part 3.
@@ -41,7 +41,7 @@ data = np.asarray(data_list)
 L = data[:,0] # labels of samples
 
 # Generate random weights of 256 + 256 + 256 AND 1 for initial bias
-W = np.random.random_sample((256 * 3) + 1,)
+W = np.random.random_sample((256 * 3) + 1,) - np.random.random_sample()
 
 # rows = data.shape[0]
 rows = 200

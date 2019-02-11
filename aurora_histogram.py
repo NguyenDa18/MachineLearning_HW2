@@ -35,19 +35,19 @@ def genHist(images):
 
     # R histogram
     plt.figure(0)
-    # for i in range(0, 256):
-    #     plt.bar(i, red_hist[i], color = getRed(i), edgecolor=getRed(i), alpha=0.3)
+    for i in range(0, 256):
+        plt.bar(i, red_hist[i], color = getRed(i), edgecolor=getRed(i), alpha=0.3)
 
 
-    # # G histogram
-    # plt.figure(1)
-    # for i in range(0, 256):
-    #     plt.bar(i, green_hist[i], color = getGreen(i), edgecolor=getGreen(i),alpha=0.3)
+    # G histogram
+    plt.figure(1)
+    for i in range(0, 256):
+        plt.bar(i, green_hist[i], color = getGreen(i), edgecolor=getGreen(i),alpha=0.3)
 
-    # # B histogram
-    # plt.figure(2)
-    # for i in range(0, 256):
-    #     plt.bar(i, blue_hist[i], color = getBlue(i), edgecolor=getBlue(i),alpha=0.3)
+    # B histogram
+    plt.figure(2)
+    for i in range(0, 256):
+        plt.bar(i, blue_hist[i], color = getBlue(i), edgecolor=getBlue(i),alpha=0.3)
     return perceptron_hist
 
 aurora_images = glob.glob('yes-aurora/*.jpg')
