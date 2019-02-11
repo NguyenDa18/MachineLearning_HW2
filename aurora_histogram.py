@@ -22,14 +22,17 @@ def genHist(images):
             histogram = img.histogram()
             # Take only RGB counts
             l1 = histogram[0:256]
+            # red_hist = [val / max(l1) for val in l1]
             red_hist = [val / 1500 for val in l1]
-            red_hist = [1 if val > 1 else val for val in red_hist]
+            red_hist = [0 if val > 1 else val for val in red_hist]
             l2 = histogram[256:512]
+            # blue_hist = [val / max(l2) for val in l2]
             blue_hist = [val / 1800 for val in l2]
-            blue_hist = [1 if val > 1 else val for val in blue_hist]
+            blue_hist = [0 if val > 1 else val for val in blue_hist]
             l3 = histogram[512:768]
+            # green_hist = [val / max(l3) for val in l3]
             green_hist = [val / 2500 for val in l3]
-            green_hist = [1 if val > 1 else val for val in green_hist]
+            green_hist = [0 if val > 1 else val for val in green_hist]
             rgb_hist = red_hist + green_hist + blue_hist
             perceptron_hist.append(rgb_hist)
 
